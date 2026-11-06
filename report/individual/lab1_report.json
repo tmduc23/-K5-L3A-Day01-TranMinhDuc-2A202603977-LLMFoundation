@@ -1,0 +1,133 @@
+{
+ "seed": 3881,
+ "predictions": {
+  "ml_f1": {
+   "text": "Dự đoán trước khi chạy: F1-score khoảng 0.90. Recall có thể cao hơn Precision, vì mô hình có khả năng phát hiện phần lớn các email Spam, nhưng vẫn có thể phân loại nhầm một số email Ham thành Spam, dẫn đến giảm Precision.",
+   "time": "15:19:40"
+  },
+  "ml_lr": {
+   "text": "lr=0.001 thì hội tụ chậm, lr=50 thì có thể không hội tụ.",
+   "time": "15:19:45"
+  },
+  "dl_curve": {
+   "text": "Val loss sẽ giảm lúc đầu rồi tăng nhẹ (overfit). F1 của MLP sẽ tương đương hoặc chỉ cao hơn một chút so với Logistic Regression do dữ liệu nhỏ và BoW giới hạn khả năng biểu diễn phi tuyến.",
+   "time": "15:20:25"
+  },
+  "dl_relu": {
+   "text": "Bỏ ReLU thì F1 có thể giảm nhẹ hoặc gần như không đổi, vì mạng mất khả năng học các đặc trưng phi tuyến.",
+   "time": "15:20:40"
+  },
+  "emb_search": {
+   "text": "Dự đoán Embedding Search sẽ cải thiện khả năng tìm kiếm nhờ biểu diễn ngữ nghĩa, nhưng kết quả phụ thuộc vào chất lượng embedding.",
+   "time": "15:23:15"
+  },
+  "emb_tricky": {
+   "text": "Encoder + LogReg sẽ đoán đúng nhiều hơn vì hiểu ngữ nghĩa và ngữ cảnh, thay vì chỉ dựa vào sự xuất hiện của từ khóa như BoW.",
+   "time": "15:24:23"
+  },
+  "llm_models": {
+   "text": "GPT có khả năng phân loại tốt nhờ hiểu ngữ cảnh, nhưng chi phí và thời gian phản hồi cao hơn các mô hình truyền thống.",
+   "time": "15:24:25"
+  }
+ },
+ "checks": {
+  "1.1 vectorize": true,
+  "1.2 sigmoid / predict_proba": true,
+  "1.3 train_logreg": true,
+  "1.4 metrics": true,
+  "2.1 build_mlp": true,
+  "2.2 train_mlp": true,
+  "3.1–3.2 cosine / top_k_similar": true,
+  "3.3 knn_predict": true,
+  "4.2–4.3 prompt / parse_label": true,
+  "4.1 + 4.4 call_openai / llm_classify_batch": true
+ },
+ "experiments": [
+  {
+   "key": "ml_f1",
+   "time": "15:19:40"
+  },
+  {
+   "key": "ml_lr",
+   "time": "15:19:45"
+  },
+  {
+   "key": "dl_curve",
+   "time": "15:20:25"
+  },
+  {
+   "key": "dl_relu",
+   "time": "15:20:40"
+  },
+  {
+   "key": "emb_search",
+   "time": "15:23:15"
+  },
+  {
+   "key": "emb_tricky",
+   "time": "15:24:23"
+  }
+ ],
+ "results": {
+  "1. BoW + LogReg (tự code)": {
+   "accuracy": 0.9793548387096774,
+   "precision": 1.0,
+   "recall": 0.8117647058823529,
+   "f1": 0.8961038961038961,
+   "f1_SUB": 0.9189189189189189,
+   "train_s": 4.8069633269999485,
+   "msg_per_s": 30468.515742507505,
+   "p50_ms": 0.06886000005579263,
+   "p95_ms": 0.18166969999811017,
+   "usd_per_1k": 0.0
+  },
+  "2. BoW + MLP (deep learning)": {
+   "accuracy": 0.9896774193548387,
+   "precision": 0.9873417721518988,
+   "recall": 0.9176470588235294,
+   "f1": 0.9512195121951219,
+   "f1_SUB": 0.9743589743589743,
+   "train_s": 14.577517919000002,
+   "msg_per_s": 27986.601964832502,
+   "p50_ms": 0.31638350003504456,
+   "p95_ms": 0.3876523000940323,
+   "usd_per_1k": 0.0
+  },
+  "3a. Encoder (MiniLM) + kNN": {
+   "accuracy": 0.9690322580645161,
+   "precision": 0.801980198019802,
+   "recall": 0.9529411764705882,
+   "f1": 0.8709677419354839,
+   "f1_SUB": 1.0,
+   "train_s": 107.93808072499996,
+   "msg_per_s": 28.695690532026084,
+   "p50_ms": 47.50614950000909,
+   "p95_ms": 70.53439974993125,
+   "usd_per_1k": 0.0
+  },
+  "3b. Encoder (MiniLM) + LogReg": {
+   "accuracy": 0.9883870967741936,
+   "precision": 0.9222222222222223,
+   "recall": 0.9764705882352941,
+   "f1": 0.9485714285714287,
+   "f1_SUB": 1.0,
+   "train_s": 108.54555217100005,
+   "msg_per_s": 46.20244681444348,
+   "p50_ms": 26.006538499927956,
+   "p95_ms": 52.75624504987489,
+   "usd_per_1k": 0.0
+  },
+  "3c. Encoder (MiniLM) + MLP head": {
+   "accuracy": 0.9935483870967742,
+   "precision": 0.9651162790697675,
+   "recall": 0.9764705882352941,
+   "f1": 0.9707602339181286,
+   "f1_SUB": 1.0,
+   "train_s": 109.33773793099977,
+   "msg_per_s": 43.697885044900964,
+   "p50_ms": 25.041800499934652,
+   "p95_ms": 38.869358050112616,
+   "usd_per_1k": 0.0
+  }
+ }
+}
